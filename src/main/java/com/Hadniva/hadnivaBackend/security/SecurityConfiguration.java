@@ -3,6 +3,7 @@ package com.Hadniva.hadnivaBackend.security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.InMemoryOAuth2AuthorizedClientService;
@@ -18,7 +19,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/auth/register", "/register", "/auth/login", "/public/**", "/h2-console/**").permitAll()
+                .requestMatchers("/auth/register","/email/","/auth**","/register", "/auth/login", "/public/**", "/h2-console/**").permitAll()
                 .anyRequest().authenticated())
             .oauth2Login(oauth2 -> oauth2
                 .loginPage("/auth/login"))
@@ -26,7 +27,7 @@ public class SecurityConfiguration {
                 .logoutUrl("/auth/logout")
                 .logoutSuccessUrl("/auth/login?logout")
                 .permitAll())
-            .csrf(csrf -> csrf.disable());
+            .csrf(AbstractHttpConfigurer::disable);
 
         return http.build();
     }

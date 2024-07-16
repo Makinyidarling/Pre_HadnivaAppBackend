@@ -9,15 +9,9 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.Hadniva.hadnivaBackend.entity.User;
 import com.Hadniva.hadnivaBackend.repository.UserRepository;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 @Service
 public class AuthenticationService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
@@ -28,11 +22,6 @@ public class AuthenticationService implements OAuth2UserService<OAuth2UserReques
     public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-    }
-
-    public User loadUserByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
     public User registerUser(User user) {
@@ -56,16 +45,12 @@ public class AuthenticationService implements OAuth2UserService<OAuth2UserReques
         OAuth2User oAuth2User = new DefaultOAuth2UserService().loadUser(userRequest);
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
 
-        switch (registrationId) {
-            case "google":
-                return handleGoogleUser(oAuth2User);
-            case "linkedin":
-                return handleLinkedInUser(oAuth2User);
-            case "apple":
-                return handleAppleUser(oAuth2User);
-            default:
-                throw new OAuth2AuthenticationException("Unsupported OAuth2 provider");
-        }
+        return switch (registrationId) {
+            case "google" -> handleGoogleUser(oAuth2User);
+            case "linkedin" -> handleLinkedInUser(oAuth2User);
+            case "apple" -> handleAppleUser(oAuth2User);
+            default -> throw new OAuth2AuthenticationException("Unsupported OAuth2 provider");
+        };
     }
 
     private OAuth2User handleGoogleUser(OAuth2User oAuth2User) {
@@ -100,21 +85,6 @@ public class AuthenticationService implements OAuth2UserService<OAuth2UserReques
         user.setPassword(passwordEncoder.encode("oauth2user"));
         user.setAttributes(oAuth2User.getAttributes());
 
-        return userRepository.save(user);
-    }
-
-    public User updateProfilePicture(Long userId, MultipartFile file) throws IOException {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-
-        Path directory = Paths.get("profile-pictures");
-        if (!Files.exists(directory)) {
-            Files.createDirectories(directory);
-        }
-        Path filePath = directory.resolve(file.getOriginalFilename());
-        Files.copy(file.getInputStream(), filePath);
-
-        user.setProfilePictureUrl(filePath.toString());
         return userRepository.save(user);
     }
 }
