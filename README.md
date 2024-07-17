@@ -17,7 +17,8 @@ To run this application locally, follow these steps:
     Prerequisites:
         Java JDK 11 or higher
         Maven
-        MySQL or H2 Database (configured in application.properties)
+        H2 Databas(configured in application.ymil)
+        for other Databases, make sure it's properly configured in your application.properties 
 
   ##  Clone the repository:
 
