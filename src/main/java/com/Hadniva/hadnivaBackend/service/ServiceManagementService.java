@@ -1,7 +1,5 @@
 package com.Hadniva.hadnivaBackend.service;
 
-import com.Hadniva.hadnivaBackend.service.ServiceManagementService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,8 +12,12 @@ import java.util.List;
 
 @Service
 public class ServiceManagementService {
-    @Autowired
-    private ServiceRepository serviceRepository;
+
+    private final ServiceRepository serviceRepository;
+
+    public ServiceManagementService(ServiceRepository serviceRepository) {
+        this.serviceRepository = serviceRepository;
+    }
 
     public List<HadnivaServices> getAllServices() {
         return serviceRepository.findAll();

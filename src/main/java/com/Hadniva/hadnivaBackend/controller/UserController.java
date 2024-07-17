@@ -3,7 +3,6 @@ package com.Hadniva.hadnivaBackend.controller;
 import java.io.IOException;
 import java.util.List;
 
-import com.Hadniva.hadnivaBackend.service.AuthenticationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,31 +17,15 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/users")
 public class UserController {
 
-    private final AuthenticationService authenticationService;
     private final UserService userService;
     private final BookingService bookingService;
 
-    public UserController(AuthenticationService authenticationService, UserService userService, BookingService bookingService) {
+    public UserController(UserService userService, BookingService bookingService) {
         super();
-        this.authenticationService = authenticationService;
         this.userService = userService;
         this.bookingService = bookingService;
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody User user) {
-        User registeredUser = authenticationService.registerUser(user);
-        return ResponseEntity.ok(registeredUser);
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<User> loginUser(@RequestParam String username, @RequestParam String password) {
-        User user = authenticationService.authenticateUser(username, password);
-        if (user != null) {
-            return ResponseEntity.ok(user);
-        }
-        return ResponseEntity.status(401).body(null);
-    }
 
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {

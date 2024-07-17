@@ -54,7 +54,7 @@ public class AuthenticationService implements OAuth2UserService<OAuth2UserReques
     }
 
     private OAuth2User handleGoogleUser(OAuth2User oAuth2User) {
-        User user = userRepository.findByEmail(oAuth2User.getAttribute("email"))
+        User user = userRepository.findByEmail(oAuth2User.getAttribute("Set name"))
                 .orElseGet(() -> registerNewUser(oAuth2User));
 
         user.setProfilePictureUrl(oAuth2User.getAttribute("picture"));
@@ -62,7 +62,7 @@ public class AuthenticationService implements OAuth2UserService<OAuth2UserReques
     }
 
     private OAuth2User handleLinkedInUser(OAuth2User oAuth2User) {
-        User user = userRepository.findByEmail(oAuth2User.getAttribute("email"))
+        User user = userRepository.findByEmail(oAuth2User.getAttribute("Name"))
                 .orElseGet(() -> registerNewUser(oAuth2User));
 
         return new DefaultOAuth2User(user.getAuthorities(), oAuth2User.getAttributes(), "email");
