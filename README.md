@@ -19,11 +19,11 @@ To run this application locally, follow these steps:
    - Java JDK 11 or higher
    - Maven
    - H2 Database (configured in `application.yml`)
-   - To use other data bases, make sure to properly configure it in your application.porperties or  yml 🍠 
+   - To use other databases, make sure to properly configure it in your application.properties or  yml 🍠 
 
 2. **Clone the repository**:
    ```
-   git clone https://github.com/your/repository.git
+   git clone https://github.com/Makinyidarling/Pre_HadnivaAppBackend.git
    cd hadniva-backend
    ```
 
